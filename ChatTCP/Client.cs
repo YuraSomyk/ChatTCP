@@ -9,7 +9,7 @@ namespace ChatTCP.Server {
         protected internal NetworkStream Stream { get; private set; }
         string userName;
         TcpClient client;
-        Server server; // объект сервера
+        Server server; 
 
         public Client(TcpClient tcpClient, Server serverObject) {
             Id = Guid.NewGuid().ToString();
@@ -21,11 +21,11 @@ namespace ChatTCP.Server {
         public void Process() {
             try {
                 Stream = client.GetStream();
-                // получаем имя пользователя
+                // Get Client name
                 string message = GetMessage();
                 userName = message;
 
-                message = userName + " вошел в чат";
+                message = userName + " connect to chat";
                 // посылаем сообщение о входе в чат всем подключенным пользователям
                 server.BroadcastMessage(message, this.Id);
                 Console.WriteLine(message);
@@ -54,7 +54,7 @@ namespace ChatTCP.Server {
 
         // Read message and convert to string
         private string GetMessage() {
-            byte[] data = new byte[64]; // буфер для получаемых данных
+            byte[] data = new byte[64];
             StringBuilder builder = new StringBuilder();
             int bytes = 0;
             do {

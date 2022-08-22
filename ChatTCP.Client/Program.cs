@@ -17,16 +17,15 @@ namespace ChatTCP.Client {
             userName = Console.ReadLine();
             client = new TcpClient();
             try {
-                client.Connect(host, port); //подключение клиента
-                stream = client.GetStream(); // получаем поток
+                client.Connect(host, port);  
+                stream = client.GetStream();
 
                 string message = userName;
                 byte[] data = Encoding.Unicode.GetBytes(message);
                 stream.Write(data, 0, data.Length);
 
-                // запускаем новый поток для получения данных
                 Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
-                receiveThread.Start(); //старт потока
+                receiveThread.Start(); 
                 Console.WriteLine("Добро пожаловать, {0}", userName);
                 SendMessage();
             } catch (Exception ex) {
@@ -36,7 +35,7 @@ namespace ChatTCP.Client {
             }
         }
 
-        // отправка сообщений
+        // Send messages
         static void SendMessage() {
             Console.WriteLine("Введите сообщение: ");
 
@@ -46,11 +45,12 @@ namespace ChatTCP.Client {
                 stream.Write(data, 0, data.Length);
             }
         }
-        // получение сообщений
+
+        // Listen Message
         static void ReceiveMessage() {
             while (true) {
                 try {
-                    byte[] data = new byte[64]; // буфер для получаемых данных
+                    byte[] data = new byte[64];  
                     StringBuilder builder = new StringBuilder();
                     int bytes = 0;
                     do {
@@ -60,9 +60,9 @@ namespace ChatTCP.Client {
                     while (stream.DataAvailable);
 
                     string message = builder.ToString();
-                    Console.WriteLine(message);//вывод сообщения
+                    Console.WriteLine(message); 
                 } catch {
-                    Console.WriteLine("Подключение прервано!"); //соединение было прервано
+                    Console.WriteLine("Connection close!");  
                     Console.ReadLine();
                     Disconnect();
                 }
@@ -71,10 +71,10 @@ namespace ChatTCP.Client {
 
         static void Disconnect() {
             if (stream != null)
-                stream.Close();//отключение потока
+                stream.Close(); 
             if (client != null)
-                client.Close();//отключение клиента
-            Environment.Exit(0); //завершение процесса
+                client.Close(); 
+            Environment.Exit(0);  
         }
     }
 }
